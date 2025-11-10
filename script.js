@@ -1,4 +1,8 @@
 //'use strict';
+// …or push an existing repository from the command line
+// // git remote add origin https://github.com/sheldnykol/Bankist-Account-System.git
+// git branch -M main
+// git push -u origin main
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -87,6 +91,9 @@ let arr = ['a','b','c','d','e'];
 console.log(arr.slice(2)); // c , d ,e
 //It does not manipulate the array but instead it creates a new array
 
+//slice ( start (includes the element ) , end ( does not include the element ));
+// just the array with the elements that was sliced ! IT DOES NOT CHANGE THE ORIGINAL ARRAY
+// IF YOU WANT TO MANIPULATE THE ORIGINAL ARRAY TO DISQUALIFY FROM START TO END ELEMENTS THEN USE SPLICE
 console.log(arr.slice(2,4)); //[c , d ]
 console.log(arr.slice(-2)); // [d , e]
 console.log(arr.slice(-1)); //[] e ]
@@ -259,8 +266,9 @@ const account5 = {
   pin: 1111,
 };
 //SHOWS THE BALANCE RIGHT TO THE TOP OF THE PAGE
-const calcAndDisplayBalance = function(movements) {
-  const balance = movements.reduce( (acc , mov) => acc + mov, 0);
+const calcAndDisplayBalance = function(acc) {
+  const balance = acc.movements.reduce( (acc , mov) => acc + mov, 0);
+  acc.balance = balance;
   labelBalance.textContent = `${balance}€`
 };
  //movements of the account 1 
@@ -343,7 +351,21 @@ const createUsernames = function (users) {
  } 
 createUsernames(accounts);
 console.log(accounts);
-//LOGIN Handler
+
+const updateUI = function (currentAccount) {
+          //Display movements
+        displayMovements(currentAccount.movements); //movement argument
+
+        //Display Balance
+        calcAndDisplayBalance(currentAccount); 
+
+        //Display Summary
+        calcDisplaySummary(currentAccount.movements);
+        calcDisplayOut(currentAccount.movements);
+        findInterest(currentAccount.movements,currentAccount.interestRate);
+}
+
+//LOGIN Handler ///
 
 // Event handler
 let currentAccount;
@@ -363,17 +385,10 @@ btnLogin.addEventListener('click', function(e) {
         labelWelcome.textContent = `Welcome back ${currentAccount.owner.split(' ')[0]}`;
         containerApp.style.opacity = 1;
         console.log(containerApp.style.opacity);
+        
 
-        //Display movements
-        displayMovements(currentAccount.movements); //movement argument
 
-        //Display Balance
-        calcAndDisplayBalance(currentAccount.movements); 
-
-        //Display Summary
-        calcDisplaySummary(currentAccount.movements);
-        calcDisplayOut(currentAccount.movements);
-        findInterest(currentAccount.movements,currentAccount.interestRate);
+        updateUI(currentAccount);
       } else {
         alert(`Wrong pin for user ${currentAccount.owner}`)
       }
@@ -383,9 +398,53 @@ btnLogin.addEventListener('click', function(e) {
 })
 
 
+// TRANSFER MONEY TO OTHER USERS
 
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value);//return the object
+  console.log(amount);
+  console.log(receiverAcc);
+  // LOSE the amount and the receiver GAINS amount
+  // Before sent money
+  // amount > 0 , balace > amount , receiver exists , reicever account must not be the current account
+  inputTransferAmount.value = inputTransferTo.value =' '; //clean the inputs
+  if(amount > 0 && 
+    currentAccount.balance >= amount && 
+    receiverAcc?.username !== currentAccount.username){ //if does not exist does not cause error it will assign it as undefined
+    
+      console.log('Transfer valid');
+      currentAccount.movements.push(-amount);
+      receiverAcc.movements.push(amount);
+      updateUI(currentAccount);
 
+  } else {
+    alert("Something went wrong");
+  }
 
+})
+btnClose.addEventListener('click', function(e) {
+  e.preventDefault();
+  console.log('Delete');
+  console.log(currentAccount);
+  console.log(Number(inputClosePin.value), Number(currentAccount.pin))
+  if(Number(inputClosePin.value) === Number(currentAccount.pin) && inputCloseUsername.value === currentAccount.username){
+    const index = accounts.findIndex(acc => acc.username === currentAccount.username);
+    console.log(index);
+    
+    accounts.splice(index, 1);
+    console.log(accounts);
+    // hide UI
+    containerApp.style.opacity = 0;
+  }else {
+    alert('Username or Pin is incorrect , please try again ! ');
+  }
+})
+
+//findindex method : returns the index of the found element not the element itself
+//close account : delete object from the accounts
+//delete element of the array splicemethod (in splice we need the index of the element)
 
 
 
@@ -557,3 +616,24 @@ console.log(accounts);
 
 const account7 = accounts.find(acc => acc.owner === 'Jessica Davis');
 console.log(account7); //returns the account  the Object OF the owner which name is Jessica Davis
+
+/// FINDLAST AND FINDLASTINDEX METHODS
+console.log(movements);
+const lastWithdrawal = movements.find(mov => mov < 0);
+console.log(lastWithdrawal);
+// It's looking from the last element of the array and holds the 
+// first element which fulfills the condition mov < 0
+
+const lastestLargeMovementIndex = movements.findLastIndex(mov => Math.abs(mov) > 1000);
+console.log(lastestLargeMovementIndex) ; // Holds the value of the index ! ! 
+//its searching through the array and holds the index of the element that will find which fulfills the condition mov > 1000
+//'Your latest large movement was X movements ago'
+
+console.log(movements);
+console.log(movements.includes(-130)); // true
+
+//we want to know if there is any positive movement in this array > 0
+
+const anyDeposits = movements.some(mov => mov > 1500);
+console.log(anyDeposits);
+
