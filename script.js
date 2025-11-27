@@ -423,7 +423,22 @@ btnTransfer.addEventListener('click', function (e) {
     alert("Something went wrong");
   }
 
+});
+
+btnLoan.addEventListener('click', function(e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1 )){
+    //Add movement
+    currentAccount.movements.push(amount);
+
+    //update ui
+    updateUI(currentAccount)
+  }
+  inputLoanAmount.value = '';
 })
+
+
 btnClose.addEventListener('click', function(e) {
   e.preventDefault();
   console.log('Delete');
@@ -602,7 +617,7 @@ const totalDepositsUSD = movements
 const firstWithdrawal = movements.find(mov => mov < 0)
 //it will not return a new array but the first element in the array that satisfies this condition
 console.log(movements);
-console.log(firstWithdrawal); // -400 
+//console.log(firstWithdrawal); // -400 
 
 //DIFFERENCES WITH FILTER 
 //FILTER RETURNS ALL THE ELEMENTS FROM THE ARRAY AND RETURNS NEW ARRAY
@@ -629,11 +644,51 @@ console.log(lastestLargeMovementIndex) ; // Holds the value of the index ! !
 //its searching through the array and holds the index of the element that will find which fulfills the condition mov > 1000
 //'Your latest large movement was X movements ago'
 
-console.log(movements);
+console.log(movements);//EQUALITY
 console.log(movements.includes(-130)); // true
 
 //we want to know if there is any positive movement in this array > 0
+//if we had === instead of > its the same with the includes() method
+const anyDeposits = movements.some(mov => mov > 1500); //CONDITION
+console.log(anyDeposits); //true
 
-const anyDeposits = movements.some(mov => mov > 1500);
-console.log(anyDeposits);
+// EVERY method
+//If every element passes the condition then it returns true
+console.log(movements.every(mov => mov> 0));
+console.log(account4.movements.every(mov => mov > 0));
+//Account4 has only deposit movements
 
+const deposit = mov => mov > 0;
+console.log(movements.some(deposit)); //Returns true if atleast one element of the array is > 0
+console.log(movements.every(deposit)); // Returns true if All the elements of the array is > 0
+console.log(movements.filter(deposit)); // Returns a new array which contains all the elements of the array that fullfill the condition > 0 
+
+const arr4 = [[1, 2, 3], [4, 5, 6] , 7, 8];
+//ES 2019 NEW METHODS
+//1] FLAT 
+console.log(arr.flat());//No callback function / ONE LEVEL NESTING and destruct the arrays in one
+// the result : [1,2,3,4,5,6,7,8];
+
+const arrDeep =[[[1,2],3], [4, [5,6]], 7 , 8];
+console.log(arrDeep.flat());
+
+
+const accountMovements = accounts.map(acc => acc.movements);
+console.log(accountMovements); //Returns one array which contains array element equal with the amount of the accounts and each array contains the moves of each account
+const allMovements = accountMovements.flat(); //We destruct the array and we join all the arrays into one array , which in result contains all the moves of each acount 
+console.log(allMovements);
+const overalBalance = allMovements.reduce((acc , mov ) => acc + mov , 0);
+console.log(overalBalance);
+
+const overalBalanceRemake = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overalBalanceRemake);
+
+//FLATMAP METHOD combines the two methods flat and map
+//goes only one level deep in nested arrays
+const overalBalance2 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc , mov) => acc + mov ,0 )
+console.log(overalBalance2);
