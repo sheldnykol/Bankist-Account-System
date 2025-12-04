@@ -181,6 +181,7 @@ const updateUI = function (currentAccount) {
 
 //1st running function -
 createUsernames(accounts); //GEORGE DELOX -> gd adds username in the reference type object
+containerApp.classList.remove('logged-in');/////
 
 // Event handler
 let currentAccount;
@@ -203,7 +204,8 @@ btnLogin.addEventListener("click", function (e) {
 
       //Welcome message
       labelWelcome.textContent = `Welcome back ${currentAccount.owner.split(" ")[0]}`;
-      containerApp.style.opacity = 1;
+      containerApp.classList.add('logged-in');/////////////
+      containerApp.style.opacity = 1;/////////////
 
       updateUI(currentAccount);
     } else {

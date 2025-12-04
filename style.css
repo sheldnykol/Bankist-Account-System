@@ -94,7 +94,7 @@ nav {
   gap: 2rem;
 
   /* NOTE This creates the fade in/out anumation */
-  opacity: 0;  
+  /* opacity: 0;   */
   /* makes it invisible the opacity 0  */
   transition: all 1s;
 }
@@ -295,4 +295,105 @@ h2 {
 
 .timer {
   font-weight: 600;
+}
+/*  */
+/* Welcome Panel Styles */
+.welcome-panel {
+  transform: translate(-50%, -50%);
+}
+
+.welcome-panel__content h1 {
+  font-size: 3.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.scripts-list, .test-accounts {
+  margin: 3rem 0;
+  text-align: left;
+}
+
+.scripts-list ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.scripts-list li {
+  margin: 0.8rem 0;
+  font-size: 1.5rem;
+}
+
+.account-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.account-card {
+  background: #f8f9fa;
+  padding: 1.2rem 1.8rem;
+  border-radius: 1rem;
+  border: 2px solid #e0e0e0;
+  font-family: monospace;
+  font-size: 1.4rem;
+  min-width: 140px;
+}
+
+.account-card strong {
+  display: block;
+  font-size: 2rem;
+  color: #39b385;
+  margin-bottom: 0.5rem;
+}
+
+code {
+  background: #333;
+  color: #9be15d;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.4rem;
+  font-size: 1.4rem;
+}
+/* WELCOME PANEL */
+.welcome-panel {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f3f3;           
+  z-index: 5;                
+  padding: 8rem 2rem 4rem;       
+
+}
+
+.welcome-panel__content {
+
+  background: white;
+  padding: 4rem 5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 3rem 6rem rgba(0,0,0,0.25);
+
+}
+
+/*hide panel in login */
+.app.logged-in .welcome-panel {
+  display: none;
+}
+
+/* hidden at first */
+.main-ui {
+  display: none;
+  grid-template-columns: 4fr 3fr;
+  grid-template-rows: auto repeat(3, 15rem) auto;
+  gap: 2rem;
+}
+
+/*logged in - the acccount panel */
+.app.logged-in .main-ui {
+  display: grid;
 }
